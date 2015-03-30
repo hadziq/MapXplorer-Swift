@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="14A389" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="y2a-zD-eBY">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+    </dependencies>
+    <scenes>
+        <!--BrowserView-->
+        <scene sceneID="YYX-Np-iNX">
+            <objects>
+                <viewController storyboardIdentifier="BrowserView" title="BrowserView" id="Ki4-Qn-pA7" customClass="BrowserViewController" customModule="FinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Dg3-kU-2c7"/>
+                        <viewControllerLayoutGuide type="bottom" id="y2e-ca-edE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="uVh-zv-CjX" customClass="UITableView">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <connections>
+                            <outlet property="dataSource" destination="Ki4-Qn-pA7" id="Ray-Gr-vXx"/>
+                            <outlet property="delegate" destination="Ki4-Qn-pA7" id="Lwr-io-Ue0"/>
+                        </connections>
+                    </view>
+                    <navigationItem key="navigationItem" id="JcH-Nj-Ty4">
+                        <barButtonItem key="rightBarButtonItem" title="MapView" id="81p-hQ-qi6">
+                            <connections>
+                                <segue destination="fbL-pJ-jmp" kind="show" id="lbM-QC-cu8"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="KN5-J4-HP0" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2253" y="-762"/>
+        </scene>
+        <!--MapView-->
+        <scene sceneID="fDg-wc-SG1">
+            <objects>
+                <viewController storyboardIdentifier="MapView" title="MapView" id="fbL-pJ-jmp" customClass="MapViewController" customModule="FinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vYN-CM-i5i"/>
+                        <viewControllerLayoutGuide type="bottom" id="bXg-Ry-jvh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wJy-sV-8lw">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="akd-52-Jve" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3008" y="-762"/>
+        </scene>
+        <!--Nav-->
+        <scene sceneID="b6q-Hq-gsD">
+            <objects>
+                <navigationController storyboardIdentifier="NAV" title="Nav" automaticallyAdjustsScrollViewInsets="NO" id="y2a-zD-eBY" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="og7-jA-r3B">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Ki4-Qn-pA7" kind="relationship" relationship="rootViewController" id="4oi-nV-FNU"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0LG-5D-UWY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1441" y="-762"/>
+        </scene>
+    </scenes>
+</document>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>DBFB2F88-78FA-470C-A9DE-2C929BC1E4AD</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>71761D4B2070128A1EB1B30FB9198B62EC5BAD06</key>
+		<string>https://github.com/pidog1993/MapXplorer.git</string>
+	</dict>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>71761D4B2070128A1EB1B30FB9198B62EC5BAD06</key>
+		<string>MapXplorer/</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/pidog1993/MapXplorer.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>71761D4B2070128A1EB1B30FB9198B62EC5BAD06</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>71761D4B2070128A1EB1B30FB9198B62EC5BAD06</string>
+			<key>IDESourceControlWCCName</key>
+			<string>MapXplorer</string>
+		</dict>
+	</array>
+</dict>
+</plist>
