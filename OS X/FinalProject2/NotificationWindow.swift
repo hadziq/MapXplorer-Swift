@@ -17,6 +17,8 @@ class NotificationWindow: NSWindow {
             self.opaque = false
             self.excludedFromWindowsMenu = false
             self.backgroundColor = NSColor.clearColor()
+        
+        println("window init finished")
             
         
     }

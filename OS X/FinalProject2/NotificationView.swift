@@ -19,6 +19,8 @@ class NotificationView: NSView {
         NSColor.blackColor().set()
         path.fill()
         
+        println("notification init finished")
+        
     }
     
 }

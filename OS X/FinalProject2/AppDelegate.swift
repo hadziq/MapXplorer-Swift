@@ -91,10 +91,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
         self.latitude = latitudeString
         self.longitude = longitudeString
         self.heading = headingString
-        var url = NSURL(string: NSString(format: "http://nrlab.csie.ntust.edu.tw/MapXplorer_Service/streetview.php?latitude=%@&longitude=%@&heading=%@",latitudeString,longitudeString,headingString))
         
+        var url =  NSURL(string: "http://nrlab.csie.ntust.edu.tw/MapXplorer_Service/streetview.php?latitude=\(latitudeString)&longitude=\(longitudeString)&heading=\(headingString)")
+
         var request = NSURLRequest(URL: url!)
         self.streetWebView.mainFrame.loadRequest(request)
+        
     }
     
     
@@ -103,9 +105,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
         var numberFormatter = NSNumberFormatter()
         numberFormatter.numberStyle = .DecimalStyle
         var headingNumber: NSNumber! = numberFormatter.numberFromString(bearingString)
+        print("heading: ")
+        println(headingNumber)
+        
         var jsCallerObject = self.streetWebView.windowScriptObject
-        var args = NSArray(object: headingNumber)
-        jsCallerObject.callWebScriptMethod("turnHeading", withArguments: args)
+        if headingNumber != nil{
+            var args = NSArray(object: headingNumber)
+            jsCallerObject.callWebScriptMethod("turnHeading",withArguments: args)
+        }
         
     }
     
@@ -129,7 +136,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
         var jsCallerObject = self.streetWebView.windowScriptObject
 //        ***
         var args = NSArray(object: NSNumber(float: self.resetPitchFloat))
-        jsCallerObject.callWebScriptMethod("turnHeading", withArguments: args)
+        jsCallerObject.callWebScriptMethod("turnPitch", withArguments: args)
         
         if self.resetPitchFloat == 0{
             return
@@ -142,13 +149,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
         
     }
     func moveForward(){
+        NSLog("windowscript")
         var jsCallerObject = self.streetWebView.windowScriptObject
         jsCallerObject.callWebScriptMethod("moveForward", withArguments: nil)
 
     }
     
     func moveBackward(){
-        
+        NSLog("windowscript")
         var jsCallerObject = self.streetWebView.windowScriptObject
         jsCallerObject.callWebScriptMethod("moveBackward", withArguments: nil)
     }
@@ -186,9 +194,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
         
         var messageComponents = self.message?.componentsSeparatedByString(",")
         
-        var messageHeader = NSString(format: "%@",locale: messageComponents?.first as? NSLocale)
-     //    messageHeader = NSString(format: "%@",locale: messageComponents?[0] as? NSLocale)
 
+        var messageHeader = messageComponents?[0] as NSString
+        
         if messageHeader.isEqualToString("Location"){
             
             NSLog("On Long Press For LOCATION")
@@ -196,11 +204,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
             self.longitude = messageComponents?[2] as NSString
             self.heading = messageComponents?[3] as NSString
 
+            
+            
+            println(self.latitude)
+            println(self.longitude)
+            println(self.heading)
+            
+        
             // change location of street view
             self.loadStreetViewWithLatitude(self.latitude, longitudeString: self.longitude, headingString: self.heading)
         }else if messageHeader.isEqualToString("Bearing"){
             
-            
+
             if !lastMessageHeader.isEqualToString("Bearing"){
                 NSLog("On Acceleration or On Map Touch For ROTATION")
             }
@@ -248,6 +263,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
             NSLog("Notification: %@", messageComponents?[1] as String)
             self.displayHUDNotification(messageComponents?[1]as NSString)
         }
+        else{
+            
+            NSLog("Go Fuck Yourself\n\n")
+        }
         
         self.lastMessageHeader = messageHeader
         
@@ -277,7 +296,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
     }
 //    tableView
     
-   func tableView(TableView: NSTableView,
+/*   func tableView(TableView: NSTableView,
         willDisplayCell Cell: AnyObject,
         forTableColumn TableColumn: NSTableColumn?,
         row rowIndex: Int){
@@ -288,11 +307,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
             }
             
     }
+*/
     
     func tableView(tableView: NSTableView!, objectValueForTableColumn tableColumn: NSTableColumn!, row: Int) -> AnyObject!
     {
         //        var string:String = "row " + String(row) + ", Col" + String(tableColumn.identifier)
         //        return string
+        
         return self.services.objectAtIndex(row).name
         //return "!!!"
     }
@@ -303,7 +324,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSTableViewDelegate, NSTable
     }
     
     func tableViewSelectionDidChange(notification: NSNotification){
-        selectedRow=notification.object?.selectedRow
+        selectedRow = notification.object?.selectedRow
     }
     
 //    pragma mark JavaScript bridge
