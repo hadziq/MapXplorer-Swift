@@ -10,31 +10,31 @@
 	<string>FinalProject2</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>8EAF2FA1AF67DAC110C4588C687AE651A10C46B7</key>
-		<string>github.com:pidog1993/FinalProject.git</string>
+		<key>D302565DDA7EDFA815B4704EAB2044FA9EC47E0C</key>
+		<string>github.com:pidog1993/MapXplorer-Swift.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
-	<string>FinalProject2.xcodeproj</string>
+	<string>OS X/FinalProject2.xcodeproj</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>8EAF2FA1AF67DAC110C4588C687AE651A10C46B7</key>
-		<string>../..</string>
+		<key>D302565DDA7EDFA815B4704EAB2044FA9EC47E0C</key>
+		<string>../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>github.com:pidog1993/FinalProject.git</string>
+	<string>github.com:pidog1993/MapXplorer-Swift.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>111</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>8EAF2FA1AF67DAC110C4588C687AE651A10C46B7</string>
+	<string>D302565DDA7EDFA815B4704EAB2044FA9EC47E0C</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>8EAF2FA1AF67DAC110C4588C687AE651A10C46B7</string>
+			<string>D302565DDA7EDFA815B4704EAB2044FA9EC47E0C</string>
 			<key>IDESourceControlWCCName</key>
-			<string>FinalProject2</string>
+			<string>untitled%20folder</string>
 		</dict>
 	</array>
 </dict>
