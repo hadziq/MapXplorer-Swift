@@ -22,7 +22,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     var isRouterOriented: Bool = false
     var isNorthDependent: Bool = false
     var isIntersectionAwared: Bool?
-    var drivingAccelerationLevel: Int = 1
+    var drivingAccelerationLevel: Int = 2
     var isInAutoRotationMode: Bool = false
     var isDeviceLaying: Bool = false
     var isInDriving: Bool = false
@@ -68,6 +68,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     var left_trans:CGFloat=0
     var right_trans:CGFloat=0
     var press=false
+    var move_f:CGFloat=0
+    var pitch_f:CGFloat=0
     func viewkk(){}
     
     
@@ -105,7 +107,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
         self.mapView.clear()
         
         self.title="MapXplorer Map View"
-        self.motionManager = CMMotionManager()
+        //self.motionManager = CMMotionManager()
         self.motionManager.accelerometerUpdateInterval = 0.2
         
         // AUTO ROTATION BUTTON
@@ -236,11 +238,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                     (accelData: CMAccelerometerData!, error: NSError!) in
                     self.doAcceleration(accelData.acceleration)
                 })
-                press=true
-                while(press){
-                    self.doMove()
-                }
-                //self.doPitch()
+                self.doMove()
+                self.doPitch()
                 
             }
         }else if(touch.view==self.rightView){
@@ -262,11 +261,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                     (accelData: CMAccelerometerData!, error: NSError!) in
                     self.doAcceleration(accelData.acceleration)
                 })
-
-                press=true
-                while(press){
-                    self.doMove()
-                }                //self.doPitch()
+                self.doMove()
+                self.doPitch()
             }
         }else{
             self.sendMessage("OnMapTouchBegan")
@@ -279,7 +275,6 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
         var touch:UITouch!=touches.anyObject() as UITouch
         if(touch.view==self.leftView || touch.view==self.rightView){
-            press=false
             self.sendMessage("OnPanTouchEnd")
             left_trans=0
             right_trans=0
@@ -483,17 +478,20 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     
     func doAcceleration(acceleration: CMAcceleration){
         // FOR WHETHER MOVING OR PITCHING
+        print(acceleration.z)
         if self.isInDriving == false && self.isInPitching == false{
             
             if acceleration.z < 0.7{
+                print("acc_move")
                 self.isDeviceLaying = true
                 self.leftSteer.image = UIImage(named: "mapXplorer_steer~ipad.png")
                 self.rightSteer.image = UIImage(named: "mapXplorer_steer~ipad.png")
                 
             }else{
+                print("acc_pitch")
                 self.isDeviceLaying = false
-                self.leftSteer.image = UIImage(named: "mapXplorer_steerPitch.png")
-                self.rightSteer.image = UIImage(named: "mapXplorer_steerPitch.png")
+                self.leftSteer.image = UIImage(named: "mapXplorer_steerPitch~ipad.png")
+                self.rightSteer.image = UIImage(named: "mapXplorer_steerPitch~ipad.png")
             }
         }
         if fabs(acceleration.z) > kShakingThreshold{
@@ -564,7 +562,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
         var movingTranslation: CGFloat
         self.left_trans=leftSteer.center.y-336
         self.right_trans=rightSteer.center.y-336
-        println("domove!")
+        //println("domove!")
         
         if(left_trans > right_trans){
             movingTranslation = left_trans
@@ -578,7 +576,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
             fabs(right_trans) > self.view.bounds.height/10 &&
             self.isDeviceLaying == true &&
             self.isInPitching == false){
-                println("domove!!")
+                //println("domove!!")
                 
                 //            intersection checking
                 if(self.numberOfPathLinks > 2 && self.isIntersectionAwared == true){
@@ -619,24 +617,27 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                         self.sendMessage("Backward")
                     }
                     
-                    var f = self.view.bounds.size.height/fabs(movingTranslation)/CGFloat(self.drivingAccelerationLevel)
+                     //move_f = self.view.bounds.size.height/fabs(movingTranslation)/CGFloat(self.drivingAccelerationLevel)
+                    
+                    move_f=CGFloat(1/self.drivingAccelerationLevel)
+                    NSLog("interval = %f", Float(move_f))
                     
                     
-                    NSLog("interval = %f", Float(f))
-                    
-                    
-                    self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(Float(f)), target: self, selector: Selector("doMove"), userInfo: nil, repeats: true)
+                    //self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval:f, target: self, selector: "doMove", userInfo: nil, repeats: false)
+                    //self.movingTimer = NSTimer(timeInterval:0.5, target: self, selector: "domove", userInfo: nil, repeats: false)
+                    self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "doMove", userInfo: nil, repeats: false)
+
                     
                 }
         }else{
             self.isInDriving = false
             // DEFAULT SPEED FOR NEXT TIMER CHECKING = 0.5 second
-            self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("doMove"), userInfo: nil, repeats: false)
+            self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "doMove", userInfo: nil, repeats: false)
         }
     }
     //    end of doMove___________________________________
     func doPitch(){
-        
+        print("dopitch!")
         var pitchTranslation = CGFloat()
         if(left_trans > right_trans){
             pitchTranslation = left_trans
@@ -651,27 +652,29 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                 self.isInDriving == false &&
                 fabs(left_trans) > self.view.bounds.height/10 &&
                 fabs(right_trans) > self.view.bounds.height/10){
-                    
+                    print("dopitch_velo")
+
                     self.isInPitching = true
                     
-                    if pitchTranslation < 0 && self.pitch < 89.8{
+                    if pitchTranslation < 0 && self.pitch < -89.8{
                         self.pitch += 0.2
-                    }else if pitchTranslation > 0 && self.pitch > -39.8{
+                    }else if pitchTranslation > 0 && self.pitch > 39.8{
                         self.pitch -= 0.2
                     }
                     
                     self.sendMessage(NSString(format: "Pitch,%f", self.pitch))
-                    var f = self.view.bounds.size.height/fabs(pitchTranslation)/300
-                    self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(Float(f)), target: self, selector: Selector("doPitch"), userInfo: nil, repeats: false)
+                    pitch_f = self.view.bounds.size.height/fabs(pitchTranslation)/300
+                    self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "doPitch", userInfo: nil, repeats: false)
                     
             }else{
                 
                 // DEFAULT SPEED FOR NEXT TIMER CHECKING = 0.5 second
                 self.isInPitching = false
-                self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: Selector("doPitch"), userInfo: nil, repeats: false)
+                self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "doPitch", userInfo: nil, repeats: false)
             }
         }else if self.pitchPreference.isEqualToString("Position"){
-            
+            print("dopitch_pos")
+
             if self.isDeviceLaying == false && self.isInDriving == false{
                 
                 if left_trans * right_trans > 0{
@@ -686,8 +689,11 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                     self.isInPitching = false
                 }
                 
-                self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: Selector("doPitch"), userInfo: nil, repeats: false)
+                self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "doPitch", userInfo: nil, repeats: false)
             }
+        }else{
+            print("dopitch_nothing")
+
         }
     }
     //    end of doPitch

@@ -185,12 +185,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
             mapVC.message = "no data received"
         }
         
-        var messageData: NSArray = mapVC.message?.componentsSeparatedByString("") as [NSString]
+        var messageData: NSArray = mapVC.message?.componentsSeparatedByString(",") as [NSString]
         var messageHeader: NSString = NSString(format: "%@", messageData.objectAtIndex(0) as NSString)
         
         if messageHeader.isEqualToString("Location"){
+            var numberFormatter = NSNumberFormatter()
+            numberFormatter.numberStyle = .DecimalStyle
+            
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(1) as NSString){
+                mapVC.latitude = number.doubleValue
+            }
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(2) as NSString){
+                mapVC.longitude = number.doubleValue
+            }
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(3) as NSString){
+                mapVC.movingBearing = number.doubleValue
+            }
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(4) as NSString){
+                mapVC.numberOfPathLinks = number.integerValue
+            }
+            
+            // change location on the map
+
             
         }
+        
+        
+        
         
     }
     func server(server: Server!, didNotStart errorDict: [NSObject : AnyObject]!) {
