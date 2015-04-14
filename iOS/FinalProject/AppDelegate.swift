@@ -177,10 +177,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
     }
     func server(server: Server!, didAcceptData data: NSData!) {
         
+        
         var localMessage: NSString! = NSString(data: data, encoding: NSUTF8StringEncoding)
         if( nil != localMessage || localMessage.length > 0){
             mapVC.message = localMessage
-            
+            println(localMessage)
         }else{
             mapVC.message = "no data received"
         }
@@ -206,12 +207,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
             }
             
             // change location on the map
-
             
+            var coordinate:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: mapVC.latitude, longitude: mapVC.longitude)
+            mapVC.resetLocation(coordinate)
+        }else if messageHeader.isEqualToString("Notification"){
+            
+            mapVC.showNotification(messageData.objectAtIndex(1) as NSString, type: messageData.objectAtIndex(2) as NSString)
         }
-        
-        
-        
         
     }
     func server(server: Server!, didNotStart errorDict: [NSObject : AnyObject]!) {
