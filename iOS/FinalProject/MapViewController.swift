@@ -16,7 +16,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     
     var mapView = GMSMapView()
     
-    let locationManager = CLLocationManager()
+    //let locationManager = CLLocationManager()
     var server: Server!
     var justInitiated: Bool = false
     var isRouterOriented: Bool = false
@@ -70,7 +70,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     var press=false
     var move_f:CGFloat=0
     var pitch_f:CGFloat=0
-    func viewkk(){}
+    var isAcc_ing=false
     
     
     override func prefersStatusBarHidden() -> Bool {
@@ -132,9 +132,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                     
                     for placemark in placemarks{
                         self.locationDescription = NSString(format: "%@", placemark.name)
-                        self.currentMarker.title = NSString(format: "%@", self.locationDescription)
+                        self.currentMarker.title = NSString(format: "%@", self.locationDescription) as String
                         self.currentMarker.position = CLLocationCoordinate2DMake(camera.target.latitude, camera.target.longitude)
-                        self.currentMarker.snippet =  NSString(format: "%f, %f", camera.target.latitude, camera.target.longitude)
+                        self.currentMarker.snippet =  NSString(format: "%f, %f", camera.target.latitude, camera.target.longitude) as String
                         self.currentMarker.icon = UIImage(named:"mapXplorer_marker.png")
                         self.currentMarker.map = self.mapView
                         self.mapView.selectedMarker = self.currentMarker
@@ -150,7 +150,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
             // location description is off
             self.currentMarker.title = "Current Street Position"
             self.currentMarker.position = CLLocationCoordinate2DMake(camera.target.latitude, camera.target.longitude)
-            self.currentMarker.snippet = NSString(format:" %f %f", camera.target.latitude, camera.target.longitude)
+            self.currentMarker.snippet = NSString(format:" %f %f", camera.target.latitude, camera.target.longitude) as String
             self.currentMarker.icon = UIImage(named:"mapXplorer_marker.png")
             self.currentMarker.map = self.mapView
         }
@@ -193,7 +193,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
         
         
         
-        func resetLocation(coordinate:CLLocationCoordinate2D){
+        /*func resetLocation(coordinate:CLLocationCoordinate2D){
             
             //currentLocation:CLLocation
             var currentLocation=CLLocation(latitude: coordinate.latitude,longitude: coordinate.longitude)
@@ -204,7 +204,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
         
         func didLongPressAtCoordinate(mapView:GMSMapView , coordinate:CLLocationCoordinate2D){
             //self.resetLocation(coordinate)
-        }
+        }*/
         //heading marker
         // street and pinch gesture area view
         
@@ -214,13 +214,15 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
         
         
         // Do any additional setup after loading the view.
+        
     }
     func gestureRecognizer(leftDrivePan: UIGestureRecognizer,
         shouldRecognizeSimultaneouslyWithGestureRecognizer rightDrivePan: UIGestureRecognizer) -> Bool{
             return true
     }
-    override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
-        var touch:UITouch!=touches.anyObject() as UITouch
+    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+        super.touchesBegan(touches , withEvent:event)
+        if let touch = touches.first as? UITouch {
         if(touch.view==self.leftView){
             steerTouch_left=1
             steerlocation_left=touch.locationInView(leftView)
@@ -234,12 +236,14 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                 self.sendMessage("OnPanTouchBegan")
                 left_trans=leftSteer.center.y-336
                 right_trans=rightSteer.center.y-336
+                self.isAcc_ing=true
                 self.motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.currentQueue(), withHandler: {
                     (accelData: CMAccelerometerData!, error: NSError!) in
                     self.doAcceleration(accelData.acceleration)
                 })
-                self.doMove()
-                self.doPitch()
+                    self.doMove()
+                    self.doPitch()
+                
                 
             }
         }else if(touch.view==self.rightView){
@@ -256,13 +260,16 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                 self.sendMessage("OnPanTouchBegan")
                 left_trans=leftSteer.center.y-336
                 right_trans=rightSteer.center.y-336
-                
+                self.isAcc_ing=true
+
                 self.motionManager.startAccelerometerUpdatesToQueue(NSOperationQueue.currentQueue(), withHandler: {
                     (accelData: CMAccelerometerData!, error: NSError!) in
                     self.doAcceleration(accelData.acceleration)
                 })
-                self.doMove()
-                self.doPitch()
+                    self.doMove()
+                    self.doPitch()
+                
+                
             }
         }else{
             self.sendMessage("OnMapTouchBegan")
@@ -270,10 +277,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
         /*if((steerTouch_left+steerTouch_right)==2){
         self.domove()
         }*/
+        }
     }
     
-    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
-        var touch:UITouch!=touches.anyObject() as UITouch
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        super.touchesEnded(touches , withEvent:event)
+        if let touch = touches.first as? UITouch {
         if(touch.view==self.leftView || touch.view==self.rightView){
             self.sendMessage("OnPanTouchEnd")
             left_trans=0
@@ -296,6 +305,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
             
         }else{
             self.sendMessage("OnMapTouchEnd")
+        }
         }
     }
     func handleLeftPitchPan(event:UIPanGestureRecognizer){
@@ -425,9 +435,9 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                 if error == nil{
                     for placemark in placemarks{
                         self.locationDescription = NSString(format: "%@", placemark.name)
-                        self.currentMarker.title = NSString(format: "%@", self.locationDescription)
+                        self.currentMarker.title = NSString(format: "%@", self.locationDescription) as String
                         self.currentMarker.position = CLLocationCoordinate2DMake(coordinate.latitude, coordinate.longitude)
-                        self.currentMarker.snippet =  NSString(format: "%f, %f", coordinate.latitude, coordinate.longitude)
+                        self.currentMarker.snippet =  NSString(format: "%f, %f", coordinate.latitude, coordinate.longitude) as String
                         self.currentMarker.icon = UIImage(named: "mapXplorer_marker.png")
                         self.currentMarker.map = self.mapView
                         self.mapView.selectedMarker = self.currentMarker
@@ -440,7 +450,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
             
             self.currentMarker.title = "Current Street Position"
             self.currentMarker.position = CLLocationCoordinate2DMake(coordinate.latitude, coordinate.longitude)
-            self.currentMarker.snippet = NSString(format: "%f, %f", coordinate.latitude, coordinate.longitude)
+            self.currentMarker.snippet = NSString(format: "%f, %f", coordinate.latitude, coordinate.longitude) as String
             self.currentMarker.icon = UIImage(named: "mapXplorer_marker.png")
             self.currentMarker.map = mapView
         }
@@ -478,22 +488,21 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     
     func doAcceleration(acceleration: CMAcceleration){
         // FOR WHETHER MOVING OR PITCHING
-        print(acceleration.z)
-        if self.isInDriving == false && self.isInPitching == false{
+        //print(acceleration.z)
+        //if self.isInDriving == false && self.isInPitching == false{
             
-            if acceleration.z < 0.7{
+            if acceleration.z < -0.7{
                 print("acc_move")
                 self.isDeviceLaying = true
                 self.leftSteer.image = UIImage(named: "mapXplorer_steer~ipad.png")
                 self.rightSteer.image = UIImage(named: "mapXplorer_steer~ipad.png")
-                
             }else{
                 print("acc_pitch")
                 self.isDeviceLaying = false
                 self.leftSteer.image = UIImage(named: "mapXplorer_steerPitch~ipad.png")
                 self.rightSteer.image = UIImage(named: "mapXplorer_steerPitch~ipad.png")
             }
-        }
+       // }
         if fabs(acceleration.z) > kShakingThreshold{
             
             self.sendMessage("Jump")
@@ -575,7 +584,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
             fabs(left_trans) > self.view.bounds.height/10 &&
             fabs(right_trans) > self.view.bounds.height/10 &&
             self.isDeviceLaying == true &&
-            self.isInPitching == false){
+            self.isInPitching == false ){
                 //println("domove!!")
                 
                 //            intersection checking
@@ -625,8 +634,8 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                     
                     //self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(timeInterval:f, target: self, selector: "doMove", userInfo: nil, repeats: false)
                     //self.movingTimer = NSTimer(timeInterval:0.5, target: self, selector: "domove", userInfo: nil, repeats: false)
+                    //self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(move_f), target: self, selector: "doMove", userInfo: nil, repeats: false)
                     self.movingTimer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "doMove", userInfo: nil, repeats: false)
-
                     
                 }
         }else{
@@ -637,7 +646,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     }
     //    end of doMove___________________________________
     func doPitch(){
-        print("dopitch!")
+        print("\n"+(self.pitchPreference as String)+"\n")
         var pitchTranslation = CGFloat()
         if(left_trans > right_trans){
             pitchTranslation = left_trans
@@ -646,13 +655,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
         }
         
         if(self.pitchPreference.isEqualToString("Velocity")){
-            
+            print("dopitch_velo")
             if(left_trans * right_trans > 0 &&
                 self.isDeviceLaying == false &&
                 self.isInDriving == false &&
                 fabs(left_trans) > self.view.bounds.height/10 &&
-                fabs(right_trans) > self.view.bounds.height/10){
-                    print("dopitch_velo")
+                fabs(right_trans) > self.view.bounds.height/10 ){
 
                     self.isInPitching = true
                     
@@ -664,7 +672,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                     
                     self.sendMessage(NSString(format: "Pitch,%f", self.pitch))
                     pitch_f = self.view.bounds.size.height/fabs(pitchTranslation)/300
-                    self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "doPitch", userInfo: nil, repeats: false)
+                    self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(NSTimeInterval(pitch_f), target: self, selector: "doPitch", userInfo: nil, repeats: false)
                     
             }else{
                 
@@ -673,12 +681,13 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                 self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "doPitch", userInfo: nil, repeats: false)
             }
         }else if self.pitchPreference.isEqualToString("Position"){
-            print("dopitch_pos")
 
-            if self.isDeviceLaying == false && self.isInDriving == false{
-                
+            if self.isDeviceLaying == false && self.isInDriving == false {
+                print("dopitch_pos")
+
                 if left_trans * right_trans > 0{
                     //                    remain incompelte
+                    self.pitch = -pitchTranslation/self.leftView.frame.size.height*90
                     self.sendMessage(NSString(format: "Pitch, %f", self.pitch))
                 }
                 if fabs(left_trans) > self.view.bounds.size.height/10 &&
@@ -689,7 +698,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
                     self.isInPitching = false
                 }
                 
-                self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.05, target: self, selector: "doPitch", userInfo: nil, repeats: false)
+                self.pitchTimer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "doPitch", userInfo: nil, repeats: false)
             }
         }else{
             print("dopitch_nothing")
@@ -728,10 +737,12 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     }
     
     func showNotification(notification: NSString, type: NSString){
-        if(type.isEqualToString("info")){
-            self.view.makeToast(message: notification, duration: 2.0, position: "bottom", image: UIImage(named: "info.png")!)
-        }
         
+        
+        if(type.isEqualToString("info")){
+            self.mapView.makeToast(message: notification as String, duration: 2.0, position: "bottom", image: UIImage(named: "info.png")!)
+        }
+        println("notification")
         self.sendMessage(NSString(format: "Notification,%@",notification))
         
     }
@@ -742,7 +753,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
     
     
     
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+  /*  func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         // 2
         if status == .AuthorizedWhenInUse {
             
@@ -765,7 +776,7 @@ class MapViewController: UIViewController, CLLocationManagerDelegate ,UIGestureR
             // 7
             locationManager.stopUpdatingLocation()
         }
-    }
+    }*/
     
     /*
     // MARK: - Navigation
