@@ -13,9 +13,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
     
     var window: UIWindow?
     var server: Server!
-    var serverBrowserVC: BrowserViewController!
-    var mapVC: MapViewController!
-    var navigationController: UINavigationController!
+    var serverBrowserVC :BrowserViewController!
+    var mapVC : MapViewController!
+    var navigationController :  UINavigationController!
     let storyboard = UIStoryboard(name: "Main", bundle: nil)
     
     
@@ -30,7 +30,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
         
         let type:NSString = "mapXplorer"
         
-        server = Server(protocols: type)
+        server = Server(protocols: type as String)
         server.delegate = self
         var error: NSError? = nil
         if !server.start(&error){
@@ -39,9 +39,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
         
         
         
-        serverBrowserVC = storyboard.instantiateViewControllerWithIdentifier("BrowserView") as BrowserViewController
-        mapVC = storyboard.instantiateViewControllerWithIdentifier("MapView") as MapViewController
-        navigationController = storyboard.instantiateViewControllerWithIdentifier("NAV") as UINavigationController
+        serverBrowserVC = storyboard.instantiateViewControllerWithIdentifier("BrowserView") as! BrowserViewController
+        mapVC = storyboard.instantiateViewControllerWithIdentifier("MapView") as! MapViewController
+        navigationController = storyboard.instantiateViewControllerWithIdentifier("NAV") as! UINavigationController
         
         
         
@@ -51,7 +51,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
         println(navigationController.title)
         serverBrowserVC.server = self.server
         
-        println("\(self.isConnectedToServer())")
         
         
         return true
@@ -94,22 +93,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
     // serverDelegate Protocol
     
     func serverRemoteConnectionComplete( server: Server){
-        mapVC.server = self.server
+        mapVC.server = server
         serverBrowserVC.enableStartButton(self)
     }
     
     func startMap(){
         
         var stringMessage: NSString = NSString(format: "Location,%f,%f,%f", self.mapVC.latitude, self.mapVC.longitude, self.mapVC.bearing)
-        
+        //print("!!!")
         var data = stringMessage.dataUsingEncoding(NSUTF8StringEncoding)
         var error: NSError? = nil
         self.server?.sendData(data, error: &error)
+       // self.navigationController.pushViewController(mapVC, animated: true)
     }
     
     func isConnectedToServer() -> Bool{
         return (self.mapVC.server != nil)
-        
     }
     
     func toggleUserLocation(on: Bool){
@@ -186,33 +185,44 @@ class AppDelegate: UIResponder, UIApplicationDelegate, ServerDelegate{
             mapVC.message = "no data received"
         }
         
-        var messageData: NSArray = mapVC.message?.componentsSeparatedByString(",") as [NSString]
-        var messageHeader: NSString = NSString(format: "%@", messageData.objectAtIndex(0) as NSString)
+        var messageData: NSArray = mapVC.message?.componentsSeparatedByString(",") as! [NSString]
+        var messageHeader: NSString = NSString(format: "%@", messageData.objectAtIndex(0) as! NSString)
         
         if messageHeader.isEqualToString("Location"){
             var numberFormatter = NSNumberFormatter()
             numberFormatter.numberStyle = .DecimalStyle
             
-            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(1) as NSString){
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(1) as! String){
                 mapVC.latitude = number.doubleValue
             }
-            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(2) as NSString){
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(2) as! String){
                 mapVC.longitude = number.doubleValue
             }
-            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(3) as NSString){
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(3) as! String){
                 mapVC.movingBearing = number.doubleValue
             }
-            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(4) as NSString){
+            if let number = numberFormatter.numberFromString(messageData.objectAtIndex(4) as! String){
                 mapVC.numberOfPathLinks = number.integerValue
             }
             
             // change location on the map
+<<<<<<< HEAD
             
             var coordinate:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: mapVC.latitude, longitude: mapVC.longitude)
             mapVC.resetLocation(coordinate)
         }else if messageHeader.isEqualToString("Notification"){
             
             mapVC.showNotification(messageData.objectAtIndex(1) as NSString, type: messageData.objectAtIndex(2) as NSString)
+=======
+            var coordinate:CLLocationCoordinate2D = CLLocationCoordinate2D(latitude: mapVC.latitude, longitude: mapVC.longitude)
+            mapVC.resetLocation(coordinate)
+
+            
+        }else if messageHeader.isEqualToString("Notification"){
+            
+            mapVC.showNotification(messageData.objectAtIndex(1) as! NSString, type: messageData.objectAtIndex(2) as! NSString)
+            
+>>>>>>> 99451ca97743dc716a4237e0f0471178d168abaa
         }
         
     }
