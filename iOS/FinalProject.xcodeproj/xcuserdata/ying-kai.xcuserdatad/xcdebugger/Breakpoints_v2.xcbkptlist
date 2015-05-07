@@ -17,36 +17,6 @@
             endingLineNumber = "14"
             landmarkName = "MapViewController"
             landmarkType = "3">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "FinalProject.MapViewController.__deallocating_deinit"
-                  moduleName = "FinalProject"
-                  urlString = "file:///Users/ying-kai/Desktop/FinalProject/FinalProject/MapViewController.swift"
-                  timestampString = "449811675.02229"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "14"
-                  endingLineNumber = "14"
-                  offsetFromSymbolStart = "16">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "@objc FinalProject.MapViewController.__ivar_destroyer"
-                  moduleName = "FinalProject"
-                  urlString = "file:///Users/ying-kai/Desktop/FinalProject/FinalProject/MapViewController.swift"
-                  timestampString = "449811675.022589"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "14"
-                  endingLineNumber = "14"
-                  offsetFromSymbolStart = "424">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -63,6 +33,7 @@
                   continueAfterRunningActions = "No"
                   symbolName = "Swift._fatalErrorMessage (Swift.StaticString, Swift.StaticString, Swift.StaticString, Swift.UInt) -&gt; ()"
                   moduleName = "libswiftCore.dylib"
+                  usesParentBreakpointCondition = "Yes"
                   offsetFromSymbolStart = "164">
                </Location>
             </Locations>
@@ -75,27 +46,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinalProject/BrowserViewController.swift"
-            timestampString = "446971406.031149"
+            timestampString = "452573426.060138"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "152"
-            endingLineNumber = "152"
-            landmarkName = "tableView(_:titleForHeaderInSection:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "FinalProject/BrowserViewController.swift"
-            timestampString = "446972208.934817"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "444"
-            endingLineNumber = "444"
+            startingLineNumber = "462"
+            endingLineNumber = "462"
             landmarkName = "addService(_:more:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -107,11 +62,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinalProject/MapViewController.swift"
-            timestampString = "449812404.635736"
+            timestampString = "452580045.536616"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "627"
-            endingLineNumber = "627"
+            startingLineNumber = "636"
+            endingLineNumber = "636"
             landmarkName = "doMove()"
             landmarkType = "5">
          </BreakpointContent>
@@ -123,11 +78,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinalProject/MapViewController.swift"
-            timestampString = "449812404.635736"
+            timestampString = "452580045.536616"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "627"
-            endingLineNumber = "627"
+            startingLineNumber = "636"
+            endingLineNumber = "636"
             landmarkName = "doMove()"
             landmarkType = "5">
          </BreakpointContent>
@@ -139,12 +94,44 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "FinalProject/AppDelegate.swift"
-            timestampString = "449997365.450733"
+            timestampString = "452578861.57413"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "194"
-            endingLineNumber = "194"
+            startingLineNumber = "193"
+            endingLineNumber = "193"
             landmarkName = "server(_:didAcceptData:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinalProject/MapViewController.swift"
+            timestampString = "452580045.536616"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "224"
+            endingLineNumber = "224"
+            landmarkName = "touchesBegan(_:withEvent:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "FinalProject/BrowserViewController.swift"
+            timestampString = "452573426.060138"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "tableView(_:titleForHeaderInSection:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

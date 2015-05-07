@@ -13,6 +13,7 @@ class BrowserViewController: UITableViewController {
     @IBOutlet weak var label_acceleration_level: UILabel!
     @IBOutlet weak var stepper_acceleration: UIStepper!
 //  button and switch
+    
     var service = NSMutableArray()
     var server:  Server?
     var selectedSpotIndex: Int?
@@ -31,11 +32,11 @@ class BrowserViewController: UITableViewController {
     let pitchPreferenceLabel = UILabel()
     let startButton = UIButton()
     let pitchPreferenceSegmentedControl = UISegmentedControl(items: ["Velocity ","Position"])
-    var appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-    let firstFooterView:UIView?
+    var appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var firstFooterView:UIView?
 
-    
-    
+
+
 // ---------------------
     
     
@@ -65,6 +66,9 @@ class BrowserViewController: UITableViewController {
     
 override func viewDidLoad() {
         super.viewDidLoad()
+    
+    
+        println("viewdidload")
 //        stepper_acceleration.minimumValue=1
 //        stepper_acceleration.maximumValue=6
 //        stepper_acceleration.stepValue=1
@@ -114,9 +118,7 @@ override func viewDidLoad() {
         drivingAccelerationLevelLabel.frame = CGRectMake(xleft, 240+ytop, 600, 29)
         pitchPreferenceLabel.frame = CGRectMake(xleft, 280+ytop, 500, 29)
         pitchPreferenceSegmentedControl.frame = CGRectMake(xright-120, 280+ytop, 200, 30)
-        drivingAccelerationStepper.maximumValue=6
-        drivingAccelerationStepper.minimumValue=1
-        drivingAccelerationStepper.addTarget(self, action: "stepperValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
+    
         
 
     
@@ -124,6 +126,7 @@ override func viewDidLoad() {
     }
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(true)
+        self.tableView.reloadData()
         selectedSpotIndex = -1
         self.startButton.setTitle("Click Here to Go Back to the Map", forState: UIControlState.Normal)
     }
@@ -145,11 +148,10 @@ override func viewDidLoad() {
             return 2
     }
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String?{
-        var section_title:NSString?
+        var section_title:String?
         if (section == 0){
 
             if(self.service.count>0){
-                println("count:\(self.service.count)")
                 section_title="Select Available Services:"
             }else{
                 section_title="- None of Service is Available -"
@@ -160,18 +162,22 @@ override func viewDidLoad() {
             
             section_title = "Select Initial Location:"
         }
+
         println(section_title)
 
         return section_title
     }
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        println("count:\(self.service.count)")
+        println("section : \(section)")
+        
+        var cellContent = 0
         if(section==0){
-            return service.count
+            cellContent = self.service.count
         }else if(section==1 && self.appDelegate.isConnectedToServer()){
-            return spotName.count
-        }else{
-            return 0
+            cellContent = spotName.count
         }
+        return cellContent
     }
     override func tableView(tableView: UITableView,
         heightForFooterInSection section: Int) -> CGFloat{
@@ -182,12 +188,12 @@ override func viewDidLoad() {
             }
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        var cell:UITableViewCell = self.tableView.dequeueReusableCellWithIdentifier("cell") as UITableViewCell
+        var cell:UITableViewCell = self.tableView.dequeueReusableCellWithIdentifier("cell") as! UITableViewCell
         if(indexPath.section==0){
             cell.textLabel?.text = self.service[indexPath.row].name
             
         }else if(indexPath.section==1 && self.appDelegate.isConnectedToServer()){
-            cell.textLabel?.text = self.spotName[indexPath.row]
+            cell.textLabel?.text = self.spotName[indexPath.row] as String
             
         }
         
@@ -195,7 +201,7 @@ override func viewDidLoad() {
     }
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if(indexPath.section==0){
-            self.server?.connectToRemoteService(self.service.objectAtIndex(indexPath.row) as NSNetService)
+            self.server?.connectToRemoteService(self.service.objectAtIndex(indexPath.row) as! NSNetService)
         }else if(indexPath.section==1 && self.appDelegate.isConnectedToServer()){
             selectedSpotIndex=indexPath.row
             //self.appDelegate.setLatitude(latitude:self.spotPosition[indexPath.row].CGPointValue().x, longitude: self.spotPosition[indexPath.row].CGPointValue().y)
@@ -316,7 +322,7 @@ override func viewDidLoad() {
                     //        [self.firstFooterView addSubview:self.pitchPreferenceLabel];
                     
                     // DRIVING ACCELERATION LEVEL LABEL
-                    self.drivingAccelerationLevelLabel.text = "Driving Acceleration Level = 0"
+                    self.drivingAccelerationLevelLabel.text = "Driving Acceleration Level = 2"
                     self.drivingAccelerationLevelLabel.font = UIFont.boldSystemFontOfSize(18.0)
                     self.drivingAccelerationLevelLabel.textAlignment = .Left
                     self.drivingAccelerationLevelLabel.backgroundColor = UIColor.clearColor()
@@ -359,8 +365,16 @@ override func viewDidLoad() {
                     self.intersectionAwaredSwitch.on = false
                     self.appDelegate.toggleIntersectionAwared(false)
 
+                    self.drivingAccelerationStepper.maximumValue=6
+                    self.drivingAccelerationStepper.minimumValue=1
+                    self.drivingAccelerationStepper.value=2
+                    self.drivingAccelerationStepper.stepValue=1
+                    self.appDelegate.changeDrivingAccelerationLevel(2)
+                    self.drivingAccelerationStepper.addTarget(self, action: "drivingAccelerationLevelStepperValueChanged:", forControlEvents: UIControlEvents.ValueChanged)
                     
-                    
+                    self.pitchPreferenceSegmentedControl.addTarget(self, action: "didChangePitchPreferenceSegmentedControl:", forControlEvents: UIControlEvents.ValueChanged)
+                    self.pitchPreferenceSegmentedControl.selectedSegmentIndex=0
+                    self.appDelegate.togglePitchPreference(self.pitchPreferenceSegmentedControl.titleForSegmentAtIndex(self.pitchPreferenceSegmentedControl.selectedSegmentIndex)!)
                     
                     self.view.addSubview(startButton)
                     self.view.addSubview(userLocationLabel)
@@ -399,10 +413,10 @@ override func viewDidLoad() {
         self.appDelegate.startMap()
         
     }
-    func stepperValueChanged(stepper: UIStepper){
+    /*func stepperValueChanged(stepper: UIStepper){
         self.drivingAccelerationLevelLabel.text = "Driving Acceleration Level = \(Int(stepper.value))"
         
-    }
+    }*/
     func enableStartButton(sender: AnyObject){
         self.startButton.enabled = true
     }
@@ -430,25 +444,32 @@ override func viewDidLoad() {
     }
     func drivingAccelerationLevelStepperValueChanged(sender: UIStepper){
         var value = sender.value
-        self.drivingAccelerationLevelLabel.text = NSString(format: "Driving Acceleration Level = %d", Int(value))
+        self.drivingAccelerationLevelLabel.text = NSString(format: "Driving Acceleration Level = %d", Int(value)) as String
         self.appDelegate.changeDrivingAccelerationLevel(Int(self.drivingAccelerationStepper.value))
         
     }
 
     func addService(service: NSNetService, more: Bool){
         
+        
+        
         self.service.addObject(service)
-        println("add")
+        
+        
+        println("more")
         println(self.service.count)
         if(more == false){
             println("reload")
-            dispatch_async(dispatch_get_main_queue(), {
-                
-               
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.tableView.reloadData()
-                
-                // Masquer l'icône de chargement dans la barre de status
             })
+               
+                //self.tableView.reloadData()
+                //self.tableView.beginUpdates()
+                //self.tableView.endUpdates()
+                // Masquer l'icône de chargement dans la barre de status
+            
         }
     }
     
@@ -456,14 +477,13 @@ override func viewDidLoad() {
         
         self.service.removeObject(service)
         if more == false{
-            dispatch_async(dispatch_get_main_queue(), {
-                
-                
-                
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 self.tableView.reloadData()
-                
-                // Masquer l'icône de chargement dans la barre de status
             })
+            //self.tableView.beginUpdates()
+            //self.tableView.endUpdates()
+                // Masquer l'icône de chargement dans la barre de status
+            
         }
     
     }
